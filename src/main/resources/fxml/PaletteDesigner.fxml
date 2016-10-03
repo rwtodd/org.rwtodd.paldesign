@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns:fx="http://javafx.com/fxml/1"  
+         styleClass="mainFxmlClass"
+         type="javafx.scene.layout.VBox">
+    <stylesheets>
+        <URL value="@/fxml/chooserStyles.css"/>
+    </stylesheets>
+    <FlowPane fx:id="colorDisplay" />
+    <HBox>
+        <Label>Vintage Palettes:</Label>
+        <ComboBox fx:id="vintageList" />
+        <Button onAction="#addVintage">Add</Button>
+    </HBox>
+    <HBox>
+        <Label>Scale:</Label>
+        <TextField fx:id="scaleLvl">8</TextField>
+        <ColorPicker fx:id="scaleFrom">
+            <value>
+                <javafx.scene.paint.Color fx:constant="BLACK" /> 
+            </value> 
+        </ColorPicker>
+        <ColorPicker fx:id="scaleTo" >
+            <value><javafx.scene.paint.Color fx:constant="WHITE" /></value> 
+        </ColorPicker>
+        <Button onAction="#addScale">Add</Button>
+    </HBox>
+    <FlowPane>
+        <Button onAction="#clearPalette">Clear</Button>
+        <Button onAction="#dedupPalette">Remove Duplicates</Button>
+    </FlowPane>
+</fx:root>
