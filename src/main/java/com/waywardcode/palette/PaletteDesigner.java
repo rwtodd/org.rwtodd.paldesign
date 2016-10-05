@@ -14,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 
 /**
  * PaletteDesigner is a custom control to design indexed color palettes.
@@ -28,7 +30,10 @@ public class PaletteDesigner extends VBox {
         
     private Palette palette;
     
-
+    // the context menu for colors...
+    private ContextMenu colormenu;
+    private Rectangle selectedColor; // remember who spawned the context menu...
+    
     /**
      * Initializes the control.
      */
@@ -37,21 +42,32 @@ public class PaletteDesigner extends VBox {
         loader.setRoot(this);
         loader.setController(this);
         palette = new Palette();
+       
+        // set up the context menu we'll use...
+        colormenu = new ContextMenu();
+        MenuItem delMI = new MenuItem("Delete");
+        delMI.setOnAction((ae) -> {  
+            final Rectangle box = selectedColor;
+            final int which = colorDisplay.getChildren().indexOf(box);
+            if(which >= 0) {
+                palette.remove(which);
+                colorDisplay.getChildren().remove(which);
+            }
+        });
+        colormenu.getItems().add(delMI);
         
+        // now load our FXML...
         try {
             loader.load();
         } catch(java.io.IOException ex) {
             throw new RuntimeException(ex);
         }
-        
-
+       
         for (VintagePalette vp : VintagePalette.values()) {
             vintageList.getItems().add(new ColorAdder(vp.toString(), vp::getColors));
         }
 
     }        
-    
-    
     
     /**
      * Set the palette name and color set. Any existing colors will be cleared.
@@ -119,7 +135,16 @@ public class PaletteDesigner extends VBox {
     private void redrawColors() {
         colorDisplay.getChildren().clear();
         palette.stream()
-               .forEach((c) -> colorDisplay.getChildren().add(new Rectangle(20,20,c)));
+               .forEach(c -> { 
+                    final Rectangle box = new Rectangle(20,20,c);
+                    box.setOnMouseClicked((me) -> {
+                       selectedColor = (Rectangle)me.getSource();
+                       colormenu.show(selectedColor, me.getScreenX(), me.getScreenY());
+                    });
+                    colorDisplay.getChildren().add(box);
+               });
+        
+                              
     }
 
     
