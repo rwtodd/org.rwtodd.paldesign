@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 
 /**
  * PaletteDesigner is a custom control to design indexed color palettes.
@@ -27,12 +28,17 @@ public class PaletteDesigner extends VBox {
     @FXML private ColorPicker scaleFrom, scaleTo;
     @FXML private TextField scaleLvl;
     @FXML private Pane colorDisplay;
-        
+    @FXML private Pane quantControls;
+    @FXML private TextField quantLvl;
+    
     private Palette palette;
     
     // the context menu for colors...
     private ContextMenu colormenu;
     private Rectangle selectedColor; // remember who spawned the context menu...
+    
+    // the image for quantization...
+    private Image quantImg;
     
     /**
      * Initializes the control.
@@ -43,6 +49,7 @@ public class PaletteDesigner extends VBox {
         loader.setController(this);
         palette = new Palette();
        
+        
         // set up the context menu we'll use...
         colormenu = new ContextMenu();
         MenuItem delMI = new MenuItem("Delete");
@@ -67,7 +74,17 @@ public class PaletteDesigner extends VBox {
             vintageList.getItems().add(new ColorAdder(vp.toString(), vp::getColors));
         }
 
+        // hide the quant controls until the user gives us an image...
+        quantControls.setVisible(false);
+        quantControls.setManaged(false);
+        quantImg = null;
     }        
+    
+    public void setQuantizationImage(final Image im) {
+        quantControls.setVisible(im != null);
+        quantControls.setManaged(im != null);
+        quantImg = im;
+    }
     
     /**
      * Set the palette name and color set. Any existing colors will be cleared.
@@ -129,6 +146,15 @@ public class PaletteDesigner extends VBox {
             cols[i] = from.interpolate(to, ((double)i)/(levels-1));
         }
         palette.addPalette(Optional.of("Color Scale"), cols);
+        redrawColors();
+    }
+    
+    @FXML private void addQuant(ActionEvent ae) {
+        int levels = Integer.valueOf(quantLvl.getText());
+        if(levels == 0) return;
+        final KMeansQuantizer q = new KMeansQuantizer(quantImg, levels);
+        final Color[] qcols = q.quantize();
+        palette.addPalette(Optional.of("Quantized Palette"), qcols);
         redrawColors();
     }
     

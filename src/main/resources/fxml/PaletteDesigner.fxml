@@ -32,6 +32,12 @@
         </ColorPicker>
         <Button onAction="#addScale">Add</Button>
     </HBox>
+    <HBox fx:id="quantControls">
+        <Label>Quantize:</Label>
+        <TextField fx:id="quantLvl">8</TextField>
+        <Label>colors</Label>
+        <Button onAction="#addQuant">Add</Button>
+    </HBox>
     <FlowPane>
         <Button onAction="#clearPalette">Clear</Button>
         <Button onAction="#dedupPalette">Remove Duplicates</Button>
