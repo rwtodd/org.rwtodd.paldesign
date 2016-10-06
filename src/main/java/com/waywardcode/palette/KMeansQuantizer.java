@@ -71,17 +71,25 @@ public class KMeansQuantizer {
     private void randomInitialCentroids(final PixelReader rdr) {
         Random rnd = new Random();
 
-        for (int i = 0; i < clusters.length; i++) {
-            final Color c = rdr.getColor(rnd.nextInt(width), rnd.nextInt(height));
-            clusters[i].add(c);
+        // divide the picture into quadrants...
+        int amt = (int)Math.sqrt(clusters.length);
+        if(amt < 1) amt = 1;
+        double xspan = ((double)width)/amt;
+        double yspan = ((double)height)/amt;
+        int idx = 0;
+        for(int y = 0; y < amt; ++y) {
+           for(int x = 0; x < amt; ++x) {
+              final Color c = rdr.getColor((int)((x+rnd.nextDouble())*xspan), (int)((y+rnd.nextDouble()*yspan)));
+              clusters[idx++].add(c);
+           }
         }
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                final Color c = rdr.getColor(x, y);
-//                clusters[rnd.nextInt(clusters.length)].add(c);
-//            }
-//        }
-
+        
+        // wildcards
+        for(;idx < clusters.length; ++idx) {
+              final Color c = rdr.getColor(rnd.nextInt(width), rnd.nextInt(height));
+              clusters[idx].add(c);
+        }
+                
     }
 
     private double colorDistance(final Color a, final Color b) {
