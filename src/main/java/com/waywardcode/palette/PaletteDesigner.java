@@ -6,9 +6,13 @@
 package com.waywardcode.palette;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import javafx.beans.property.ObjectProperty;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.fxml.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -30,6 +34,7 @@ public class PaletteDesigner extends VBox {
     @FXML private Pane colorDisplay;
     @FXML private Pane quantControls;
     @FXML private TextField quantLvl;
+    @FXML private Button quantBtn;
     
     private Palette palette;
     
@@ -38,7 +43,7 @@ public class PaletteDesigner extends VBox {
     private Rectangle selectedColor; // remember who spawned the context menu...
     
     // the image for quantization...
-    private Image quantImg;
+    private ObjectProperty<Image> quantImg;
     
     /**
      * Initializes the control.
@@ -49,7 +54,6 @@ public class PaletteDesigner extends VBox {
         loader.setController(this);
         palette = new Palette();
        
-        
         // set up the context menu we'll use...
         colormenu = new ContextMenu();
         MenuItem delMI = new MenuItem("Delete");
@@ -80,9 +84,9 @@ public class PaletteDesigner extends VBox {
         quantImg = null;
     }        
     
-    public void setQuantizationImage(final Image im) {
-        quantControls.setVisible(im != null);
-        quantControls.setManaged(im != null);
+    public void setQuantizationImage(final ObjectProperty<Image> im) {
+        quantControls.setVisible(im.get() != null);
+        quantControls.setManaged(im.get() != null);
         quantImg = im;
     }
     
@@ -152,10 +156,29 @@ public class PaletteDesigner extends VBox {
     @FXML private void addQuant(ActionEvent ae) {
         int levels = Integer.valueOf(quantLvl.getText());
         if(levels == 0) return;
-        final KMeansQuantizer q = new KMeansQuantizer(quantImg, levels);
-        final Color[] qcols = q.quantize();
-        palette.addPalette(Optional.of("Quantized Palette"), qcols);
-        redrawColors();
+        
+        quantBtn.setText("Calculating...");
+        quantBtn.setDisable(true);
+        
+        final Task<Color[]> quantTask = new Task<Color[]>() {
+            @Override
+            protected Color[] call() throws Exception {
+               final KMeansQuantizer q = new KMeansQuantizer(quantImg.get(), levels);
+               return q.quantize();  
+            }
+            
+        };
+        quantTask.setOnSucceeded(t -> {
+            try {
+               palette.addPalette(Optional.of("Quantized Palette"), quantTask.get());
+               quantBtn.setText("Add");
+               quantBtn.setDisable(false);
+               redrawColors();
+            } catch(java.lang.InterruptedException | ExecutionException ie) {
+               /* do nothing */
+            }
+        });
+        new Thread(quantTask).start();
     }
     
     private void redrawColors() {

@@ -13,6 +13,10 @@
    -fx-alignment: CENTER_LEFT;   
 }
 
+TextField {
+   -fx-pref-column-count: 4;    
+}
+
 Rectangle.colorChoice {
    /* -fx-arc-height: 5; */
    /* -fx-arc-width: 5;  */

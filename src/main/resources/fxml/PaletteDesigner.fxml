@@ -36,7 +36,7 @@
         <Label>Quantize:</Label>
         <TextField fx:id="quantLvl">8</TextField>
         <Label>colors</Label>
-        <Button onAction="#addQuant">Add</Button>
+        <Button fx:id="quantBtn" onAction="#addQuant">Add</Button>
     </HBox>
     <FlowPane>
         <Button onAction="#clearPalette">Clear</Button>
