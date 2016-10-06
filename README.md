@@ -7,15 +7,16 @@ designing indexed color palettes.
 
 This control is in its early stages.  It lets you:
 
- - add a vintage palette (CGA, EGA, Web-Safe)
+ - add a vintage palette (e.g., CGA, EGA, Web-Safe)
  - add a scaled set of colors to the palette
    - can create gray-scale, or interpolate any two colors
    - can choose how many color levels you want
  - Remove duplicate colors you may have added
+ - Delete a color from the list by clicking on it
+ - Quantizing an image to a given number of colors
 
 Missing features I plan to add:
 
- - Change or delete a color from the palette by clicking on it
  - Move colors around the palette by dragging them.
 
 ## Screenshot
