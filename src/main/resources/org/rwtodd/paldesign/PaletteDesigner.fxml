@@ -11,7 +11,7 @@
          styleClass="mainFxmlClass"
          type="javafx.scene.layout.VBox">
     <stylesheets>
-        <URL value="@/fxml/chooserStyles.css"/>
+        <URL value="@chooserStyles.css"/>
     </stylesheets>
     <FlowPane fx:id="colorDisplay" />
     <HBox>

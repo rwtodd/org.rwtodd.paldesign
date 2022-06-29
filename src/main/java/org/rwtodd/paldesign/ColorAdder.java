@@ -1,9 +1,4 @@
-/*
- * Copyright Richard Todd. I put the code under the
- * GPL v2.0.  See the LICENSE file in the repository.
- * for more information.
- */
-package com.waywardcode.palette;
+package org.rwtodd.paldesign;
 
 import java.util.function.Supplier;
 import javafx.scene.paint.Color;

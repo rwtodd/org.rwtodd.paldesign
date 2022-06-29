@@ -1,9 +1,4 @@
-/*
- * Copyright Richard Todd. I put the code under the
- * GPL v2.0.  See the LICENSE file in the repository.
- * for more information.
- */
-package com.waywardcode.palette;
+package org.rwtodd.paldesign;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -49,7 +44,7 @@ public class PaletteDesigner extends VBox {
      * Initializes the control.
      */
     public PaletteDesigner() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PaletteDesigner.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("PaletteDesigner.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         palette = new Palette();
