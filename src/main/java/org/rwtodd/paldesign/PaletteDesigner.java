@@ -179,7 +179,7 @@ public class PaletteDesigner extends VBox {
     private void redrawColors() {
         colorDisplay.getChildren().clear();
         palette.stream()
-               .forEach(c -> { 
+               .forEachOrdered(c -> {
                     final Rectangle box = new Rectangle(20,20,c);
                     box.setOnMouseClicked((me) -> {
                        selectedColor = (Rectangle)me.getSource();

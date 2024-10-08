@@ -49,6 +49,11 @@ public class KMeansQuantizer {
         return totalError;
     }
 
+    /**
+     * Take a pass at quantizing the image.
+     *
+     * @return an array of quantized Colors.
+     */
     public Color[] quantize() {
         // Step 1: randomly assign colors to centroids...
         final PixelReader rdr = img.getPixelReader();
